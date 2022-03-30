@@ -11,7 +11,6 @@ sign()
 
 function sign() {
   const url = { url: `https://bbs-api.mihoyo.com/apihub/api/getGameList`, headers: JSON.parse(signheaderVal) }
-  url.headers['Content-Type'] = 'application/json'
   chavy.get(url, (error, response, data) => {
     const result = JSON.parse(data)
     bbslist = result.data.list
@@ -23,6 +22,7 @@ function sign() {
 function signbbs(bbs) {
   const data = { gids: bbs.id }
   const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn`, headers: JSON.parse(signheaderVal), body: JSON.stringify(data) }
+  url.headers['Content-Type'] = 'application/json'
   chavy.post(url, (error, response, data) => signinfo.push(data))
 }
 
