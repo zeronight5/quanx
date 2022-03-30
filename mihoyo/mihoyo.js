@@ -22,6 +22,10 @@ function sign() {
 function signbbs(bbs) {
   const data = { gids: bbs.id }
   const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn`, headers: JSON.parse(signheaderVal), body: JSON.stringify(data) }
+  const randomStr = utils.randomString(6);
+  const timestamp = Math.floor(Date.now() / 1000)
+  let sign = md5(`salt=b253c83ab2609b1b600eddfe974df47b&t=${timestamp}&r=${randomStr}`);
+  url.headers['DS'] = `${timestamp},${randomStr},${sign}`
   url.headers['Content-Type'] = 'application/json'
   chavy.post(url, (error, response, data) => signinfo.push(data))
 }
