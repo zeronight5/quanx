@@ -24,11 +24,11 @@ function sign() {
 }
 
 function signbbs(bbs) {
-  const data = { gids: bbs.id }
-  const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn`, headers: JSON.parse(signheaderVal), body: JSON.stringify(data) }
+  const data = JSON.stringify({ gids: bbs.id })
+  const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn`, headers: JSON.parse(signheaderVal), body: data }
   const randomStr = randomString(6)
   const timestamp = Math.floor(Date.now() / 1000)
-  const sig = hex_md5(`salt=b253c83ab2609b1b600eddfe974df47b&t=${timestamp}&r=${randomStr}`)
+  const sig = hex_md5(`salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=${timestamp}&r=${randomStr}&b=${data}&q=`)
   const ds = `${timestamp},${randomStr},${sig}`
   chavy.log(ds)
   url.headers['DS'] = ds
