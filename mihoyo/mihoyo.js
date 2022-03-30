@@ -20,7 +20,8 @@ function sign() {
 }
 
 function signbbs(bbs) {
-  const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn?gids=${bbs.id}`, headers: JSON.parse(signheaderVal) }
+  const data = { gids: bbs.id }
+  const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn`, headers: JSON.parse(signheaderVal), body: JSON.stringify(data) }
   chavy.post(url, (error, response, data) => signinfo.push(data))
 }
 
