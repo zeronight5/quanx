@@ -105,3 +105,8 @@ function init() {
   }
   return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
 }
+
+function md5(str){
+  const crypto = require('crypto');
+  return crypto.createHash("md5").update(str, "utf8").digest("hex")
+}
