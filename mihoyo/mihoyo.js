@@ -7,6 +7,14 @@ const signheaderVal = chavy.getdata(signheaderKey)
 const signinfo = []
 let bbslist = []
 
+const randomString = (length: number): string => {
+  let randomStr = '';
+  for (let i=0; i<length; i++) {
+    randomStr += _.sample('abcdefghijklmnopqrstuvwxyz0123456789');
+  }
+  return randomStr;
+}
+
 sign()
 
 function sign() {
@@ -22,11 +30,11 @@ function sign() {
 function signbbs(bbs) {
   const data = { gids: bbs.id }
   const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn`, headers: JSON.parse(signheaderVal), body: JSON.stringify(data) }
-  const randomStr = utils.randomString(6)
+  const randomStr = randomString(6)
   const timestamp = Math.floor(Date.now() / 1000)
   const sig = hex_md5(`salt=b253c83ab2609b1b600eddfe974df47b&t=${timestamp}&r=${randomStr}`)
   const ds = `${timestamp},${randomStr},${sig}`
-  console.log(ds)
+  chavy.log(ds)
   url.headers['DS'] = ds
   url.headers['Content-Type'] = 'application/json'
   chavy.post(url, (error, response, data) => signinfo.push(data))
