@@ -28,11 +28,13 @@ function signbbs(bbs) {
   const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn`, headers: JSON.parse(signheaderVal), body: data }
   const randomStr = randomString(6)
   const timestamp = Math.floor(Date.now() / 1000)
-  const sig = hex_md5(`salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=${timestamp}&r=${randomStr}&b=${data}&q=`)
+  const c = `salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=${timestamp}&r=${randomStr}&b=${data}&q=`
+  chavy.log(c)
+  const sig = hex_md5(c)
   const ds = `${timestamp},${randomStr},${sig}`
-  chavy.log(ds)
   url.headers['DS'] = ds
   url.headers['Content-Type'] = 'application/json'
+  url.headers['x-rpc-app_version'] = '2.23.1'
   chavy.post(url, (error, response, data) => signinfo.push(data))
 }
 
