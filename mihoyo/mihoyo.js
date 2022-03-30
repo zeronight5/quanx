@@ -11,6 +11,7 @@ sign()
 
 function sign() {
   const url = { url: `https://bbs-api.mihoyo.com/apihub/api/getGameList`, headers: JSON.parse(signheaderVal) }
+  url.headers['Content-Type'] = 'application/json'
   chavy.get(url, (error, response, data) => {
     const result = JSON.parse(data)
     bbslist = result.data.list
