@@ -9,7 +9,7 @@ const randomString = (length = 8) => {
     return Math.random().toString(16).substr(2, length);
 };
 
-chavy.log("current header: " + JSON.stringify(signheaderVal))
+chavy.log("current cookie: " + signcookieVal)
 
 sign()
 
@@ -28,6 +28,7 @@ function sign() {
         const url = { url: `https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign`, headers: get_headers(), body: sign_data }
         url.headers['DS'] = getDS(sign_data)
         url.headers['x-rpc-device_id'] = signDeviceIdVal
+        url.headers['Cookie'] = signcookieVal
         chavy.post(url, (error, response, data) => {
           const result = JSON.parse(data)
           if (result.retcode == 0) {
