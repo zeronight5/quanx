@@ -14,60 +14,46 @@ const randomString = (length = 8) => {
 sign()
 
 function sign() {
-  const url = { url: `https://bbs-api.mihoyo.com/apihub/api/getGameList`, headers: JSON.parse(signheaderVal) }
+  const url = { url: `https://https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn`, headers: JSON.parse(signheaderVal) }
+  url.headers['Referer'] = 'https://webstatic.mihoyo.com'
+  delete url.headers['Host']
   chavy.get(url, (error, response, data) => {
     const result = JSON.parse(data)
-    bbslist = result.data.list
-    for (bbs of bbslist) signbbs(bbs)
-    check()
+    const role = result.data.list[0]
+    if (role) {
+      region = role.region
+      game_uid = role.game_uid
+      sign_data = JSON.stringify({ act_id: "e202009291139501", region: region, uid: game_uid })
+
+      const url = { url: `https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign`, headers: JSON.parse(signheaderVal), body: sign_data }
+      url.headers['DS'] = getDS(sign_data)
+      url.headers['Content-Type'] = 'application/json'
+      url.headers['Referer'] = 'https://webstatic.mihoyo.com'
+      delete url.headers['Host']
+      chavy.post(url, (error, response, data) => {
+        const result = JSON.parse(data)
+        if (result.retcode == 0) {
+          chavy.msg(cookieName, `签到成功`, ``)
+        } else {
+          chavy.msg(cookieName, `签到失败: ${result.retmsg}`, ``)
+        }
+        chavy.done()
+      })
+    } else {
+      chavy.msg(cookieName, `签到失败: 没有找到游戏角色`, ``)
+      chavy.done()
+    }
   })
 }
 
-function signbbs(bbs) {
-  const data = JSON.stringify({ gids: bbs.id })
-  const url = { url: `https://bbs-api.mihoyo.com/apihub/app/api/signIn`, headers: JSON.parse(signheaderVal), body: data }
+
+function getDS(data) {
   const randomStr = randomString(6)
   const timestamp = Math.floor(Date.now() / 1000)
   const c = `salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=${timestamp}&r=${randomStr}&b=${data}&q=`
-  chavy.log(c)
+  chavy.log("sig: " + c)
   const sig = hex_md5(c)
-  const ds = `${timestamp},${randomStr},${sig}`
-  url.headers['DS'] = ds
-  url.headers['Content-Type'] = 'application/json'
-  url.headers['x-rpc-app_version'] = '2.23.1'
-  chavy.post(url, (error, response, data) => signinfo.push(data))
-}
-
-function check(checkms = 0) {
-  if (bbslist.length == signinfo.length) {
-    showmsg()
-  } else {
-    if (checkms > 5000) {
-      chavy.msg(`${cookieName}`, `签到失败: 超时退出`, ``)
-      chavy.done()
-    } else {
-      setTimeout(() => check(checkms + 100), 100)
-    }
-  }
-}
-
-function showmsg() {
-  const totalcnt = bbslist.length
-  let signed = 0
-  let skiped = 0
-  let succnt = 0
-  let failcnt = 0
-  for (info of signinfo) {
-    const i = JSON.parse(info)
-    if (i.retcode == 0) (signed += 1), (succnt += 1)
-    else if (i.retcode == 1008) (signed += 1), (skiped += 1)
-    else failcnt += 1
-  }
-  let subtitle = totalcnt == signed ? '签到结果: 全部成功' : '签到结果: 部分成功'
-  subtitle = 0 == signed ? '签到结果: 全部失败' : subtitle
-  const detail = `共签: ${signed}/${totalcnt}, 本次成功: ${succnt}, 失败: ${failcnt}, 重签: ${skiped}`
-  chavy.msg(cookieName, subtitle, detail)
-  chavy.done()
+  return `${timestamp},${randomStr},${sig}`
 }
 
 function init() {
