@@ -84,9 +84,7 @@ function getDS(data) {
   const randomStr = randomInt()
   const timestamp = Math.floor(Date.now() / 1000)
   const c = `salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=${timestamp}&r=${randomStr}&b=${data}&q=`
-  chavy.log("sig: " + c)
-  const sig = md5(c)
-  chavy.log("sig md5: " + sig)
+  const sig = CryptoJS.MD5(c).toString()
   return `${timestamp},${randomStr},${sig}`
 }
 
@@ -134,7 +132,4 @@ function init() {
   return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
 }
 
-function md5(s) {
-  return CryptoJS.MD5(s).toString()
-}
 
