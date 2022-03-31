@@ -14,7 +14,7 @@ chavy.log("current cookie: " + signcookieVal)
 sign()
 
 function sign() {
-  const url = { url: `https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn`, headers: {}}
+  const url = { url: `https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn`, headers: get_headers()}
   url.headers['Cookie'] = signcookieVal
   chavy.get(url, (error, response, data) => {
     const result = JSON.parse(data)
@@ -57,7 +57,10 @@ function get_headers() {
     "Origin": "https://webstatic.mihoyo.com",
     "X-Requested-With": "com.mihoyo.hyperion",
     "Referer": "https://webstatic.mihoyo.com/",
-    "Content-Type": "application/json;charset=utf-8"
+    "Content-Type": "application/json;charset=utf-8",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "zh-CN,zh-Hans;q=0.9",
+    "Accept-Encoding": "gzip, deflate, br"
   }
 }
 
