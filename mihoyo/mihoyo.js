@@ -135,6 +135,6 @@ function init() {
 }
 
 function md5(s) {
-  CryptoJS.MD5(s).toString()
+  return CryptoJS.MD5(s).toString()
 }
 
