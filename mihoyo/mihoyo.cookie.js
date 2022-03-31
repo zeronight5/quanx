@@ -6,11 +6,26 @@ const chavy = init()
 if ($request && $request.method != 'OPTIONS') {
   const signheaderVal = JSON.stringify($request.headers)
   if (signheaderVal) {
-    chavy.setdata($request.headers['Cookie'], signcookieKey)
+  ysCookie = $request.headers['Cookie'];
+  _=(n)=>{
+    for(i in(r=ysCookie.split(';')))
+      {
+        var a=r[i].split('=');
+        if(a[0].trim()==n)
+        return a[1]
+      }
+    };
+  c=_('account_id')
+  if(c){
+  
+    chavy.setdata(ysCookie, signcookieKey)
     chavy.setdata($request.headers['x-rpc-device_id'], signDeviceIdKey)
     chavy.msg(cookieName, `获取Cookie: 成功`, ``)
   } else {
     chavy.msg(cookieName, `获取Cookie: 失败`, ``)
+  }
+  } else {
+    chavy.msg(cookieName, `获取Cookie: 失败，未找到用户信息`, ``)
   }
 }
 
