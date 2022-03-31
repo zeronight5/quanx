@@ -14,7 +14,7 @@ const randomString = (length = 8) => {
 sign()
 
 function sign() {
-  const url = { url: `https://https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn`, headers: JSON.parse(signheaderVal) }
+  const url = { url: `https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn`, headers: JSON.parse(signheaderVal) }
   url.headers['Referer'] = 'https://webstatic.mihoyo.com'
   delete url.headers['Host']
   chavy.get(url, (error, response, data) => {
