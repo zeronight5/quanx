@@ -56,6 +56,7 @@ function get_headers() {
     "Origin": "https://webstatic.mihoyo.com",
     "X-Requested-With": "com.mihoyo.hyperion",
     "Referer": "https://webstatic.mihoyo.com/",
+    "Content-Type": "application/json;charset=utf-8"
   }
 }
 
