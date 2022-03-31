@@ -5,8 +5,17 @@ const chavy = init()
 const signcookieVal = chavy.getdata(signcookieKey)
 const signDeviceIdVal = chavy.getdata(signDeviceIdKey)
 
-const randomString = (length = 8) => {
-    return Math.random().toString(16).substr(2, length);
+const randomString = (e = 8) => {
+  const s = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+  const res = []
+  for (let i = 0; i < e; ++i) {
+    res.push(s[Math.floor(Math.random() * s.length)])
+  }
+  return res.join('')
+};
+
+const randomInt = () => {
+  return Math.floor(Math.random() * (200000 - 100000 + 1)) + 100000;
 };
 
 chavy.log("current cookie: " + signcookieVal)
@@ -51,8 +60,8 @@ function sign() {
 
 function get_headers() {
   return {
-    "x-rpc-app_version": "2.23.1",
-    "User-Agent": "Mozilla/5.0 (Linux; Android 12; Mi 10 Pro Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/95.0.4638.74 Mobile Safari/537.36 miHoYoBBS/2.23.1",
+    "x-rpc-app_version": "2.11.1",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 12; Mi 10 Pro Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/95.0.4638.74 Mobile Safari/537.36 miHoYoBBS/2.11.1",
     "x-rpc-client_type": "5",
     "Origin": "https://webstatic.mihoyo.com",
     "X-Requested-With": "com.mihoyo.hyperion",
@@ -65,7 +74,7 @@ function get_headers() {
 }
 
 function getDS(data) {
-  const randomStr = randomString(6)
+  const randomStr = randomInt()
   const timestamp = Math.floor(Date.now() / 1000)
   const c = `salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=${timestamp}&r=${randomStr}&b=${data}&q=`
   chavy.log("sig: " + c)
