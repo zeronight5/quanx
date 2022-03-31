@@ -27,8 +27,6 @@ const randomInt = () => {
   return Math.floor(Math.random() * (200000 - 100000 + 1)) + 100000;
 };
 
-chavy.log("current cookie: " + signcookieVal)
-
 sign()
 
 function sign() {
@@ -88,6 +86,7 @@ function getDS(data) {
   const c = `salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=${timestamp}&r=${randomStr}&b=${data}&q=`
   chavy.log("sig: " + c)
   const sig = md5(c)
+  chavy.log("sig md5: " + sig)
   return `${timestamp},${randomStr},${sig}`
 }
 
@@ -136,6 +135,6 @@ function init() {
 }
 
 function md5(s) {
-  $.CryptoJS.MD5(s).toString()
+  CryptoJS.MD5(s).toString()
 }
 
