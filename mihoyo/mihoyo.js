@@ -1,11 +1,9 @@
-const cookieName = '米游社'
-const signurlKey = 'chavy_signurl_mihoyo'
-const signheaderKey = 'chavy_signheader_mihoyo'
+const cookieName = '原神福利'
+const signcookieKey = 'chavy_signcookie_mihoyo'
+const signDeviceIdKey = 'chavy_sign_device_id_mihoyo'
 const chavy = init()
-const signurlVal = chavy.getdata(signurlKey)
-const signheaderVal = chavy.getdata(signheaderKey)
-const signinfo = []
-let bbslist = []
+const signcookieVal = chavy.getdata(signcookieKey)
+const signDeviceIdVal = chavy.getdata(signDeviceIdKey)
 
 const randomString = (length = 8) => {
     return Math.random().toString(16).substr(2, length);
@@ -16,9 +14,8 @@ chavy.log("current header: " + JSON.stringify(signheaderVal))
 sign()
 
 function sign() {
-  const url = { url: `https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn`, headers: JSON.parse(signheaderVal) }
-  url.headers['Referer'] = 'https://webstatic.mihoyo.com'
-  delete url.headers['Host']
+  const url = { url: `https://api-takumi.mihoyo.com/binding/api/getUserGameRolesByCookie?game_biz=hk4e_cn`, headers: {}}
+  url.headers['Cookie'] = signcookieVal
   chavy.get(url, (error, response, data) => {
     const result = JSON.parse(data)
     if (result.retcode == 0) {
@@ -28,17 +25,15 @@ function sign() {
         game_uid = role.game_uid
         sign_data = JSON.stringify({ act_id: "e202009291139501", region: region, uid: game_uid })
   
-        const url = { url: `https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign`, headers: JSON.parse(signheaderVal), body: sign_data }
+        const url = { url: `https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign`, headers: get_headers(), body: sign_data }
         url.headers['DS'] = getDS(sign_data)
-        url.headers['Content-Type'] = 'application/json'
-        url.headers['Referer'] = 'https://webstatic.mihoyo.com'
-        delete url.headers['Host']
+        url.headers['x-rpc-device_id'] = signDeviceIdVal
         chavy.post(url, (error, response, data) => {
           const result = JSON.parse(data)
           if (result.retcode == 0) {
             chavy.msg(cookieName, `签到成功`, ``)
           } else {
-            chavy.msg(cookieName, `签到失败: ${result.retmsg}`, ``)
+            chavy.msg(cookieName, `签到失败: ${result.message}`, ``)
           }
           chavy.done()
         })
@@ -47,12 +42,22 @@ function sign() {
         chavy.done()
       }
     } else {
-      chavy.msg(cookieName, `签到失败: ${result.retmsg}`, ``)
+      chavy.msg(cookieName, `签到失败: ${result.message}`, ``)
       chavy.done()
     }
   })
 }
 
+function get_headers() {
+  return {
+    "x-rpc-app_version": "2.23.1",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 12; Mi 10 Pro Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/95.0.4638.74 Mobile Safari/537.36 miHoYoBBS/2.23.1",
+    "x-rpc-client_type": "5",
+    "Origin": "https://webstatic.mihoyo.com",
+    "X-Requested-With": "com.mihoyo.hyperion",
+    "Referer": "https://webstatic.mihoyo.com/",
+  }
+}
 
 function getDS(data) {
   const randomStr = randomString(6)

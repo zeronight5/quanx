@@ -1,14 +1,17 @@
-const cookieName = '米游社'
-const signurlKey = 'chavy_signurl_mihoyo'
-const signheaderKey = 'chavy_signheader_mihoyo'
+const cookieName = '原神福利'
+const signcookieKey = 'chavy_signcookie_mihoyo'
+const signDeviceIdKey = 'chavy_sign_device_id_mihoyo'
 const chavy = init()
 
 if ($request && $request.method != 'OPTIONS') {
-  const signurlVal = $request.url
   const signheaderVal = JSON.stringify($request.headers)
-  if (signurlVal) chavy.setdata(signurlVal, signurlKey)
-  if (signheaderVal) chavy.setdata(signheaderVal, signheaderKey)
-  chavy.msg(cookieName, `获取Cookie: 成功`, ``)
+  if (signheaderVal) {
+    chavy.setdata($request.headers['Cookie'], signcookieKey)
+    chavy.setdata($request.headers['x-rpc-device_id'], signDeviceIdKey)
+    chavy.msg(cookieName, `获取Cookie: 成功`, ``)
+  } else {
+    chavy.msg(cookieName, `获取Cookie: 失败`, ``)
+  }
 }
 
 function init() {
