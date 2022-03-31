@@ -11,6 +11,8 @@ const randomString = (length = 8) => {
     return Math.random().toString(16).substr(2, length);
 };
 
+chavy.log("current header: " + JSON.stringify(signheaderVal))
+
 sign()
 
 function sign() {
@@ -19,28 +21,33 @@ function sign() {
   delete url.headers['Host']
   chavy.get(url, (error, response, data) => {
     const result = JSON.parse(data)
-    const role = result.data.list[0]
-    if (role) {
-      region = role.region
-      game_uid = role.game_uid
-      sign_data = JSON.stringify({ act_id: "e202009291139501", region: region, uid: game_uid })
-
-      const url = { url: `https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign`, headers: JSON.parse(signheaderVal), body: sign_data }
-      url.headers['DS'] = getDS(sign_data)
-      url.headers['Content-Type'] = 'application/json'
-      url.headers['Referer'] = 'https://webstatic.mihoyo.com'
-      delete url.headers['Host']
-      chavy.post(url, (error, response, data) => {
-        const result = JSON.parse(data)
-        if (result.retcode == 0) {
-          chavy.msg(cookieName, `签到成功`, ``)
-        } else {
-          chavy.msg(cookieName, `签到失败: ${result.retmsg}`, ``)
-        }
+    if (result.retcode == 0) {
+      const role = result.data.list[0]
+      if (role) {
+        region = role.region
+        game_uid = role.game_uid
+        sign_data = JSON.stringify({ act_id: "e202009291139501", region: region, uid: game_uid })
+  
+        const url = { url: `https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign`, headers: JSON.parse(signheaderVal), body: sign_data }
+        url.headers['DS'] = getDS(sign_data)
+        url.headers['Content-Type'] = 'application/json'
+        url.headers['Referer'] = 'https://webstatic.mihoyo.com'
+        delete url.headers['Host']
+        chavy.post(url, (error, response, data) => {
+          const result = JSON.parse(data)
+          if (result.retcode == 0) {
+            chavy.msg(cookieName, `签到成功`, ``)
+          } else {
+            chavy.msg(cookieName, `签到失败: ${result.retmsg}`, ``)
+          }
+          chavy.done()
+        })
+      } else {
+        chavy.msg(cookieName, `签到失败: 没有找到游戏角色`, ``)
         chavy.done()
-      })
+      }
     } else {
-      chavy.msg(cookieName, `签到失败: 没有找到游戏角色`, ``)
+      chavy.msg(cookieName, `签到失败: ${result.retmsg}`, ``)
       chavy.done()
     }
   })
