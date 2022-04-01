@@ -43,7 +43,7 @@ function sign() {
   
         const url = { url: `https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign`, headers: get_headers(), body: sign_data }
         url.headers['DS'] = getDS(sign_data)
-        url.headers['x-rpc-device_id'] = signDeviceIdVal
+        url.headers['x-rpc-device_id'] = "2CF54E1FF8143E31B6FE88F3AC626BAD"
         url.headers['Cookie'] = signcookieVal
         chavy.post(url, (error, response, data) => {
           const result = JSON.parse(data)
@@ -68,7 +68,7 @@ function sign() {
 function get_headers() {
   return {
     "x-rpc-app_version": "2.11.1",
-    "User-Agent": "Mozilla/5.0 (Linux; Android 12; Mi 10 Pro Build/SKQ1.211006.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/95.0.4638.74 Mobile Safari/537.36 miHoYoBBS/2.11.1",
+    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1",
     "x-rpc-client_type": "5",
     "Origin": "https://webstatic.mihoyo.com",
     "X-Requested-With": "com.mihoyo.hyperion",
