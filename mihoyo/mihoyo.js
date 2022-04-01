@@ -43,7 +43,7 @@ function sign() {
   
         const url = { url: `https://api-takumi.mihoyo.com/event/bbs_sign_reward/sign`, headers: get_headers(), body: sign_data }
         url.headers['DS'] = getDS(sign_data)
-        url.headers['x-rpc-device_id'] = "2CF54E1FF8143E31B6FE88F3AC626BAD"
+        url.headers['x-rpc-device_id'] = signDeviceIdVal.replace(/-/g, '')
         url.headers['Cookie'] = signcookieVal
         chavy.post(url, (error, response, data) => {
           const result = JSON.parse(data)
@@ -67,8 +67,8 @@ function sign() {
 
 function get_headers() {
   return {
-    "x-rpc-app_version": "2.11.1",
-    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.11.1",
+    "x-rpc-app_version": "2.3.0",
+    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 15_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) miHoYoBBS/2.3.0",
     "x-rpc-client_type": "5",
     "Origin": "https://webstatic.mihoyo.com",
     "X-Requested-With": "com.mihoyo.hyperion",
@@ -81,9 +81,9 @@ function get_headers() {
 }
 
 function getDS(data) {
-  const randomStr = randomInt()
+  const randomStr = randomString()
   const timestamp = Math.floor(Date.now() / 1000)
-  const c = `salt=xV8v4Qu54lUKrEYFZkJhB8cuOh9Asafs&t=${timestamp}&r=${randomStr}&b=${data}&q=`
+  const c = `salt=h8w582wxwgqvahcdkpvdhbh2w9casgfl&t=${timestamp}&r=${randomStr}`
   const sig = CryptoJS.MD5(c).toString()
   return `${timestamp},${randomStr},${sig}`
 }
