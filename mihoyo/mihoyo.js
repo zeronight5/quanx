@@ -14,7 +14,7 @@ const chavy = init()
 const signcookieVal = chavy.getdata(signcookieKey)
 const signDeviceIdVal = chavy.getdata(signDeviceIdKey)
 
-const randomString = (e = 8) => {
+const randomString = (e = 6) => {
   const s = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
   const res = []
   for (let i = 0; i < e; ++i) {
